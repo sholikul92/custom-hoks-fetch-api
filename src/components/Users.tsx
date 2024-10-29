@@ -1,4 +1,5 @@
 import { useFetch } from '../hooks/useFetch';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
   id: number;
@@ -8,6 +9,11 @@ interface User {
 
 export const Users = () => {
   const { data: users, loading, error } = useFetch<User[]>('https://jsonplaceholder.typicode.com/users/');
+  const navigate = useNavigate();
+
+  const showDetailUser = (userId: number) => {
+    navigate(`/user/${userId}`);
+  };
 
   if (loading) {
     return <h1>Loading ...</h1>;
@@ -19,11 +25,17 @@ export const Users = () => {
   return (
     <>
       <h1>User</h1>
-      <ul>
-        {users?.map((user) => (
-          <li key={user.id}>{user.name}</li>
+      <table>
+        {users?.map((user, index) => (
+          <tr key={user.id}>
+            <td>{index + 1}.</td>
+            <td>{user.name}</td>
+            <td>
+              <button onClick={() => showDetailUser(user.id)}>detail</button>
+            </td>
+          </tr>
         ))}
-      </ul>
+      </table>
     </>
   );
 };
